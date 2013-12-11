@@ -4,7 +4,16 @@ const Spreadsheet = require('google-spreadsheet-stream');
 var pledgeSheet = new Spreadsheet(config('SPREADSHEET_KEY'));
 
 exports.home = function home (req, res, next) {
-  pledges = [];
+  var pledges = [];
+  var responseSent = false;
+
+  function sendResponse(pledges) {
+    if (!responseSent) {
+      res.render('core/home.html', { pledges: pledges });
+      responseSent = true;
+    }
+  }
+
   var rowsStream = pledgeSheet.getRows(config('SPREADSHEET_WORKSHEET_ID'))
     .on('data', function(data) {
       var newPledge = {
@@ -17,7 +26,11 @@ exports.home = function home (req, res, next) {
       pledges.push(newPledge);
     })
     .on('end', function() {
-      res.render('core/home.html', { pledges: JSON.stringify(pledges) });
+      sendResponse(JSON.stringify(pledges));  
+    })
+    .on('error', function(err) {
+      console.log(err);
+      sendResponse({});
     });
 }
 
