@@ -10,7 +10,8 @@
     "nunjucks": "~0.1.10",
     "optimist": "~0.6.0",
     "underscore": "~1.4.4",
-    "node-redis": "~0.1.7"
+    "node-redis": "~0.1.7",
+    "google-spreadsheet-stream": "~0.1.0"
   },
   "repository": {
     "type": "git",
